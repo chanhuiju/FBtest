@@ -1,0 +1,67 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		$.ajax({ //¨úJSON
+			url: "https://graph.facebook.com/123103684386135/posts?fields=id,from,message,picture,link,type,status_type,object_id,created_time,likes.limit(1).summary(true),shares,comments.limit(1).summary(true)&access_token=260801967406003|e2voA1kekIT3PZ68dz_98CZAcTc",
+			cache: false,
+			type: 'GET',
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			success:function(dataa){
+			
+			var datacount=dataa.data.length;
+			var rowcount=0;
+			var piccount=0;
+			var arrpic=new Array(datacount);
+			
+			for (m=0; m<datacount; m++){ //deal picture 
+				if (!(dataa.data[m].type=='status')){
+					if (typeof(dataa.data[m].picture) !== 'undefined'){
+						arrpic[piccount]=dataa.data[m].picture;
+						piccount=piccount+1;
+					}
+				}
+			}
+			
+			if ((piccount % 4)>0){ 
+				rowcount=(Math.floor(piccount / 4))+1;}
+			else{
+				rowcount=(Math.floor(piccount / 4));}
+						
+			for (j=0; j<rowcount; j++){ //output
+				var temparrpic=new Array(3);
+				for (i=0; i<4; i++){
+					if (typeof(arrpic[4*j+i]) === 'undefined'){
+						temparrpic[i]='';	
+					} else {
+						temparrpic[i]='<img height="200" width="200" src="'+arrpic[4*j+i]+'" />';
+					}
+				}
+				var rowTemplate = '<tr><td width="200">'+temparrpic[0]+'</td>'+
+				'<td width="200">'+temparrpic[1]+'</td>'+
+				'<td width="200">'+temparrpic[2]+'</td>'+
+				'<td width="200">'+temparrpic[3]+'</td></tr>';
+				var tableHtml = $("#list tbody").html();
+				tableHtml += rowTemplate;
+				$("#list tbody").html(tableHtml);
+			}
+			},
+			error:function(e){}
+		});
+	});
+	</script>
+	<title>Front-end</title>
+</head>
+<body>
+<div id="listdiv" align="center" >
+	<table border="0" id="list" cellpadding="5px" cellspacing="5px">
+	<tbody>
+	</tbody>
+	</table>
+</div>
+</body>
+</html>
+		
